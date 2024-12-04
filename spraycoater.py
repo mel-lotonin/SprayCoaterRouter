@@ -241,7 +241,7 @@ def serp(dims: tuple[int, int], stride: float, offset: Point, rotate: bool = Fal
     # Create 1x1 path with given stride
     alternate = False  # Alternate side flag
     x = 0
-    ds = stride / width
+    ds = stride / (width if not rotate else height)
     while x < 1:
         if alternate:
             path.append(Point([x, 0]))
@@ -268,7 +268,7 @@ preamble = [
 
 gcodes = preamble  + serp((36, 14), 2, Point([0, 0])).gcode() \
         + serp((35, 14), 2, Point([1, 0])).gcode() \
-        + serp((36, 14), 5, Point([0, 0]), rotate=True).gcode() \
-        + serp((36, 13), 5, Point([0, 1]),rotate=True).gcode()
+        + serp((36, 14), 2, Point([0, 0]), rotate=True).gcode() \
+        + serp((36, 13), 2, Point([0, 1]), rotate=True).gcode()
 # Print G-Codes
 print('\n'.join(f'N{10 + i * 5} {str(g)}' for (i, g) in enumerate(gcodes)))
